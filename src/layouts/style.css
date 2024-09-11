@@ -1,0 +1,44 @@
+.container-admin {
+    margin: 0 auto;
+    padding: 0 !important;
+    width: 100% !important;
+    background-color: #525050;
+}
+
+
+.collapse.show {
+    transition: width 0.1s ease-in-out;
+}
+
+.AdminLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    scrollbar-width: none;
+
+}
+
+.container-admin {
+    overflow: hidden
+}
+
+.content-area {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    height: auto;
+}
+
+.fixed-sidebar {
+    top: 50px;
+    left: 0;
+    height: calc(100vh - 50px);
+}
+
+.fixed-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}

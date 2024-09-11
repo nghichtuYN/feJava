@@ -1,0 +1,41 @@
+.nav-link {
+    display: flex !important;
+    justify-content: start;
+    align-items: end;
+    gap: 10px;
+    color: white !important;
+    width: 200px;
+}
+
+.nav-link:hover {
+    background-color: #374151 !important;
+
+}
+
+.active {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+.sidebar {
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar-expanded {
+    width: 260px;
+}
+
+.sidebar-collapsed {
+    width: 60px;
+}
+
+.nav-text {
+    transition: opacity 0.3s ease;
+    text-align: end;
+    margin-bottom: 0 ;
+}
+
+.sidebar-collapsed .nav-text {
+    display: none;
+}
