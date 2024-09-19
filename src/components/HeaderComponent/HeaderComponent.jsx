@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Col, Container, Nav, Navbar } from "react-bootstrap";
-import { CircleUser } from 'lucide-react';
+import { Col, Container, Dropdown, Nav, Navbar } from "react-bootstrap";
+import { CircleUser } from "lucide-react";
 import logo from "../../assets/logo/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { resetUser } from "../../redux/User/UserSlice";
 const HeaderComponent = () => {
   const NavBrandName = "Muong Thanh Luxury";
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    dispatch(resetUser());
+  };
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentDate(new Date());
@@ -55,7 +62,18 @@ const HeaderComponent = () => {
             className="d-flex justify-content-end align-items-center gap-5 pe-5 "
           >
             {localStringWithOptions}
-            <CircleUser size={30}/>
+            <div className="d-flex justify-content-start align-items-center gap-2 ">
+              <CircleUser size={30} />
+              <Dropdown>
+                <Dropdown.Toggle variant="dark" className="text-white">
+                  {user?.name}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={handleLogout}>Log out</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
           </Nav>
         </Container>
       </Navbar>

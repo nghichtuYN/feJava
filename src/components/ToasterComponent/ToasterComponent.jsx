@@ -1,5 +1,5 @@
 import React from "react";
-import { Collapse, Toast, ToastContainer } from "react-bootstrap";
+import { Card, Collapse, Toast, ToastContainer } from "react-bootstrap";
 import "./style.css";
 export const ToasterComponent = (props) => {
   const { showToast, message, onClose, type,icon } = props;
@@ -16,18 +16,20 @@ export const ToasterComponent = (props) => {
             show={showToast}
             delay={3000}
             autohide
-            style={{ width: "210px" }}
+            style={{ width: "300px" }}
             bg={type}
           >
             <Toast.Body className="">
-              <div className="d-flex justify-content--center align-items-center" style={{ width: "200px" }}>
+              <Card.Subtitle className="d-flex justify-content--center align-items-center" style={{ width: "300px" }}>
                 {icon}
                 <p
-                  className="text-white text-center w-100 pt-2"
+                  className="text-dark text-center w-100 pt-2"
                 >
                   {message}
                 </p>
-              </div>
+
+              </Card.Subtitle>
+              <Card.Text>Tự đóng sau 3s</Card.Text>
             </Toast.Body>
           </Toast>
         </ToastContainer>

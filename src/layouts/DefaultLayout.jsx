@@ -3,6 +3,7 @@ import HeaderComponent from "../components/HeaderComponent/HeaderComponent";
 import { Col, Container } from "react-bootstrap";
 import SideBarComponent from "../components/SideBarComponent/SideBarComponent";
 import "./style.css";
+import { ToasterComponent } from "../components/ToasterComponent/ToasterComponent";
 export const Context = createContext("unknown");
 
 export const DefaultLayout = ({ children }) => {
@@ -40,6 +41,13 @@ export const DefaultLayout = ({ children }) => {
             {children}
           </Col>
         </Container>
+        <ToasterComponent
+          message={toaster.message}
+          type={toaster.type}
+          showToast={toaster.show}
+          onClose={() => setToaster({ ...toaster, show: false })}
+          icon={toaster.icon}
+        />
       </div>
     </Context.Provider>
   );

@@ -2,10 +2,10 @@ import React from "react";
 import "./style.css";
 import { FaSearch } from "react-icons/fa";
 const SearchComponent = (props) => {
-  const { placeholder } = props;
+  const {search, placeholder,onChange } = props;
   return (
     <div className="input-wrapper">
-      <input type="text" placeholder={placeholder} />
+      <input value={search} onChange={onChange} type="text" placeholder={placeholder} />
       <FaSearch className="search-icon" />
     </div>
   );

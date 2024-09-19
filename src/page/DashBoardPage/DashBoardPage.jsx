@@ -1,4 +1,4 @@
-import React, { createContext, useMemo, useState } from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Card,
@@ -9,7 +9,10 @@ import {
   Row,
 } from "react-bootstrap";
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
+import { useSelector } from "react-redux";
+
 export const ContextDashboard = createContext("unknow");
+
 const DashBoardPage = () => {
   const isDashboard = "Dashboard";
   const revenue = "Revenue";
@@ -19,8 +22,16 @@ const DashBoardPage = () => {
   const checkOutGuest = "Check-out Guest";
   const roomServices = "Room Services";
   const upComing = "Upcoming Check-ins/ Check-outs";
+  const user = useSelector((state) => state.user);
   const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (!user?.name) {
+      setShow(true);
+    }
+  }, [user]);
+  console.log(!user?.name,show)
 
+  
   const handleClose = () => {
     setIsCheckinGuest("");
     setIsCheckoutGuest("");
