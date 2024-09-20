@@ -5,7 +5,7 @@ import { useQueryHook } from "../../hooks/useQueryHook";
 import { useState } from "react";
 import { getRoomByTypeAndAvailable } from "../../services/rooms";
 import { useMutationHook } from "../../hooks/useMutationHook";
-import { createBookingAPI } from "../../services/bookings";
+import { createBookingAPI, updateBookingAPI } from "../../services/bookings";
 import { Context } from "../../layouts/DefaultLayout";
 import { BsCheck2Circle } from "react-icons/bs";
 import { ContextBookings } from "../../page/BookingsPage/BookingsPage";
@@ -26,7 +26,6 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
       return res.data;
     } catch (error) {}
   };
-  console.log(updateBooking);
   const { data: guests } = useQueryHook(["guest"], getAllGuests);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
       setType(updateBooking?.room?.type);
     }
   }, [updateBooking]);
-
   const getAllRoomAvaliableByType = async (type) => {
     try {
       const res = await getRoomByTypeAndAvailable(type);
@@ -49,6 +47,7 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
     () => getAllRoomAvaliableByType(type),
     { enabled: !!type }
   );
+
   const onSuccess = () => {
     refetch();
     setToaster({
@@ -58,13 +57,17 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
       icon: <BsCheck2Circle size={40} color="black" />,
     });
   };
-  const mutationAdd = useMutationHook(
-    (data) => createBookingAPI(data),
+  const mutationUpdate = useMutationHook(
+    (data) => {
+      const { id, ...rest } = data;
+      return updateBookingAPI(id,rest)},
     onSuccess
   );
-
   const handleAddBookings = () => {
-    mutationAdd.mutate({ guestId, roomId, checkIn: new Date(checkIn) });
+    mutationUpdate.mutate({ id: updateBooking?.id, guestId, roomId });
+    handleClose();
+    setIsShowUpdate(false);
+    setUpdateBooking({});
   };
   return (
     <>
@@ -138,32 +141,21 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
               </Form.Select>
             </FloatingLabel>
           ) : null}
-          <Form.Group className="mb-3">
-            <Form.Label>
-              Check-in<span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              onChange={(e) => setCheckIn(e.target.value)}
-              type="date"
-            />
-          </Form.Group>
-          {/* <Form.Group className="mb-3">
-            <Form.Label>
-              Check-out<span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              onChange={(e) => setCheckOut(e.target.value)}
-              type="date"
-              placeholder="Enter name"
-            />
-          </Form.Group> */}
         </Form>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-center align-items-center">
         <Button className="w-100" variant="dark" onClick={handleAddBookings}>
           SUBMIT
         </Button>
-        <Button className="w-100" variant="outline-dark" onClick={handleClose}>
+        <Button
+          className="w-100"
+          variant="outline-dark"
+          onClick={() => {
+            handleClose();
+            setIsShowUpdate(false);
+            setUpdateBooking({});
+          }}
+        >
           CANCLE
         </Button>
       </Modal.Footer>
