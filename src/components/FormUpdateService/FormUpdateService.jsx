@@ -24,7 +24,7 @@ const FormUpdateService = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Cập nhật dịch vụ thành công",
+      message: "Update service successfull ! ",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

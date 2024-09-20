@@ -33,7 +33,7 @@ export const FormUpdateRoom = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Cập nhật phòng thành công",
+      message: "Update room successfull !",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

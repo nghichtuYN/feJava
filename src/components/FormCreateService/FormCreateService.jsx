@@ -16,7 +16,7 @@ export const FormCreateService = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo dịch vụ thành công",
+      message: "Create service successfull",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

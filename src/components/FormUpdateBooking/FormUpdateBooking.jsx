@@ -53,7 +53,7 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Cập nhật phòng thành công",
+      message: "Update booking successfull !",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });
@@ -136,7 +136,7 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
                     key={room?.id}
                     value={room?.id}
                   >
-                    {room?.number} {room?.id} {updateBooking?.room.id}
+                    {room?.number}
                   </option>
                 ))}
               </Form.Select>

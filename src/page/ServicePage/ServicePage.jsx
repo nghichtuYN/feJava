@@ -125,10 +125,10 @@ const ServicePage = () => {
   };
   const popoverSingle = (
     <Popover id={`popover-positioned-top`}>
-      <Popover.Header as="h3">Bạn có chắc chắn xóa ?</Popover.Header>
+      <Popover.Header as="h3">Are you sure delete ?</Popover.Header>
       <Popover.Body className="d-flex justify-content-around align-items-center">
         <Button size="sm" variant="danger" onClick={handleCancelSingle}>
-          Hủy
+          Cancel
         </Button>
         <Button
           size="sm"
@@ -138,7 +138,7 @@ const ServicePage = () => {
             deleteSingle();
           }}
         >
-          Xác nhận
+          Confirm
         </Button>
       </Popover.Body>
     </Popover>
@@ -221,7 +221,7 @@ const ServicePage = () => {
                   <Table responsive>
                     <thead>
                       <tr>
-                        <th>STT</th>
+                        <th>ID</th>
                         <th>Name</th>
                         <th>Category</th>
                         <th>Price</th>

@@ -23,7 +23,7 @@ export const FormUpdateGuest = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Cập nhật khách hàng thành công",
+      message: "Update guest successfull !",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

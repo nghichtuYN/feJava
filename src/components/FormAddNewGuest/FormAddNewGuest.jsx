@@ -20,7 +20,7 @@ const FormAddNewGuest = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo khách hàng thành công",
+      message: "Create new guests successfull !",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

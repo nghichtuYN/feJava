@@ -39,7 +39,7 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Check in success",
+      message: "Check in successfull",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

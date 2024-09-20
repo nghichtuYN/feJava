@@ -21,7 +21,7 @@ const FormAddNewRoom = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo phòng thành công",
+      message: "Create room successfull !",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

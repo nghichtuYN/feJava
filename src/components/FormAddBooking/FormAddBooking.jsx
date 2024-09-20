@@ -45,7 +45,7 @@ const FormAddBooking = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo đơn thành công",
+      message: "Create booking successfull !",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

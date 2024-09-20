@@ -65,16 +65,17 @@ const DashBoardPage = () => {
   const handleCheckoutGuest = () => {
     setIsCheckoutGuest(checkOutGuest);
     mutationCheckOut.mutate({ id: currentPopoverId });
+    refetch()
     handleShow();
   };
   const {data :infoCheckout}=mutationCheckOut
 
   const popoverSingle = (
     <Popover id={`popover-positioned-top`}>
-      <Popover.Header as="h3">Bạn có chắc chắn xóa ?</Popover.Header>
+      <Popover.Header as="h3">Are you sure ?</Popover.Header>
       <Popover.Body className="d-flex justify-content-around align-items-center">
         <Button size="sm" variant="danger" onClick={handleCancelSingle}>
-          Hủy
+          Cancel
         </Button>
         <Button
           size="sm"
@@ -84,7 +85,7 @@ const DashBoardPage = () => {
             handleCancelSingle();
           }}
         >
-          Xác nhận
+          Confirm
         </Button>
       </Popover.Body>
     </Popover>
