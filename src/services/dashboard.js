@@ -13,6 +13,11 @@ export const getStatsAPI = async () => {
   return res;
 };
 
+export const checkIn=async(data)=>{
+  const res = axios.post(`${API_URLS}/dashboard/check-in`,data);
+  return res
+
+}
 
 export const addRoomService=async(data)=>{
   const res = axios.post(`${API_URLS}/dashboard/room-service`,data);

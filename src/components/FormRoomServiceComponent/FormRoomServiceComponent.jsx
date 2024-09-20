@@ -82,7 +82,7 @@ const FormRoomServiceComponent = ({ handleClose, refetch }) => {
         const payload = {
           bookingId: booking?.bookingId,
           serviceId: item.service,
-          // quantity: item.amount,
+          quantity: item.amount,
         };
   
         return mutationAdd.mutateAsync(payload);

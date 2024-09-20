@@ -8,6 +8,7 @@ import { useMutationHook } from "../../hooks/useMutationHook";
 import { createBookingAPI } from "../../services/bookings";
 import { Context } from "../../layouts/DefaultLayout";
 import { BsCheck2Circle } from "react-icons/bs";
+import { checkIn } from "../../services/dashboard";
 
 const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
   const [guestId, setGuestId] = useState("");
@@ -45,12 +46,12 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
     });
   };
   const mutationAdd = useMutationHook(
-    (data) => createBookingAPI(data),
+    (data) => checkIn(data),
     onSuccess
   );
 
   const handleAddBookings = () => {
-    mutationAdd.mutate({ guestId, roomId, checkIn: new Date() });
+    mutationAdd.mutate({ guestId, roomId });
   };
   return (
     <>

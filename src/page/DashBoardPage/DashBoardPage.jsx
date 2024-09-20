@@ -47,12 +47,15 @@ const DashBoardPage = () => {
     setShow(false);
   };
 
-  const handleCheckinGuest = () => {
+  const handleCheckinGuest = (booking) => {
     setIsCheckinGuest(checkInGuest);
     handleShow();
+
   };
-  const handleCheckoutGuest = () => {
+  const handleCheckoutGuest = (booking) => {
     setIsCheckoutGuest(checkOutGuest);
+    setBooking(booking)
+
     handleShow();
   };
   const handleRoomService = (booking) => {
@@ -194,27 +197,27 @@ const DashBoardPage = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {occupiedRoomsList?.content?.map((booking, index) => {
+                          {occupiedRoomsList?.content?.map((book, index) => {
                             const checkinDate = new Date(
-                              booking?.checkIn
+                              book?.checkIn
                             ).toLocaleString("en-US", options);
 
                             return (
                               <tr key={index}>
-                                <td>{booking?.room?.number}</td>
-                                <td>{booking?.guest?.name}</td>
+                                <td>{book?.room?.number}</td>
+                                <td>{book?.guest?.name}</td>
                                 <td>{checkinDate}</td>
                                 <td>
                                   <Button
                                     variant="outline-dark"
-                                    onClick={() => handleCheckoutGuest}
+                                    onClick={()=>handleCheckoutGuest(book)}
                                   >
                                     {checkOutGuest}
                                   </Button>
                                   <Button
                                     className="ms-2"
                                     variant="outline-dark"
-                                    onClick={() => handleRoomService(booking)}
+                                    onClick={() => handleRoomService(book)}
                                   >
                                     {roomServices}
                                   </Button>

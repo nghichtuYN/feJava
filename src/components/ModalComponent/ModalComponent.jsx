@@ -16,6 +16,7 @@ import { FormLogin } from "../FormLogin/FormLogin";
 import { ContextBookings } from "../../page/BookingsPage/BookingsPage";
 import FormAddBooking from "../FormAddBooking/FormAddBooking";
 import { FormUpdateBooking } from "../FormUpdateBooking/FormUpdateBooking";
+import FormCheckOutGuestComponent from "../FormCheckOutGuestComponent/FormCheckOutGuestComponent";
 
 const ModalComponent = (props) => {
   const { show, handleClose, refetch } = props;
@@ -33,6 +34,7 @@ const ModalComponent = (props) => {
   const { isRooms, isShowUpdate } = useContext(ContextRooms);
   const { isServices } = useContext(ContextServices);
   const { isBookings, isShowUpdateBooking } = useContext(ContextBookings);
+  console.log(isCheckoutGuest,isRoomService)
   return (
     <>
       <Modal
@@ -43,14 +45,11 @@ const ModalComponent = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {/* {isCheckinGuest === checkInGuest && isCheckinGuest ? (
-          <FormCheckInGuestComponent
+        {isRoomService === roomServices && isRoomService ? (
+          <FormRoomServiceComponent
             handleClose={handleClose}
             refetch={refetch}
           />
-        ) : null} */}
-        {isRoomService === roomServices && isRoomService ? (
-          <FormRoomServiceComponent handleClose={handleClose}  refetch={refetch} />
         ) : isGuests ? (
           <FormAddNewGuest refetch={refetch} handleClose={handleClose} />
         ) : isDetailGuest ? (
@@ -67,6 +66,11 @@ const ModalComponent = (props) => {
           <FormUpdateBooking refetch={refetch} handleClose={handleClose} />
         ) : isCheckinGuest === checkInGuest && isCheckinGuest ? (
           <FormCheckInGuestComponent
+            handleClose={handleClose}
+            refetch={refetch}
+          />
+        ) : isCheckoutGuest === checkOutGuest && isCheckoutGuest ? (
+          <FormCheckOutGuestComponent
             handleClose={handleClose}
             refetch={refetch}
           />

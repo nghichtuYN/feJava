@@ -109,13 +109,13 @@ const BookingsPage = () => {
       if (page !== "1") {
         if (search !== "")
           navigate(
-            `/services/?page=${page - 1}&search=${encodeURIComponent(search)}`
+            `/bookings/?page=${page - 1}&search=${encodeURIComponent(search)}`
           );
-        else navigate(`/services/?page=${page - 1}`);
+        else navigate(`/bookings/?page=${page - 1}`);
       } else {
         if (search !== "")
-          navigate(`/services/?page=${1}&search=${encodeURIComponent(search)}`);
-        else navigate(`/services/?page=${1}`);
+          navigate(`/bookings/?page=${1}&search=${encodeURIComponent(search)}`);
+        else navigate(`/bookings/?page=${1}`);
       }
     }
     refetch();
@@ -133,6 +133,9 @@ const BookingsPage = () => {
   const deleteSingle = () => {
     mutaionDelete.mutate({ id: currentPopoverId });
   };
+
+
+  
   const popoverSingle = (
     <Popover id={`popover-positioned-top`}>
       <Popover.Header as="h3">Bạn có chắc chắn xóa ?</Popover.Header>
@@ -153,10 +156,12 @@ const BookingsPage = () => {
       </Popover.Body>
     </Popover>
   );
+  
   const value = useMemo(
-    () => ({ isBookings, typeBookings, isShowUpdateBooking }),
-    [isBookings, typeBookings, isShowUpdateBooking]
+    () => ({ isBookings, typeBookings, isShowUpdateBooking,updateBooking,setIsShowUpdate,setUpdateBooking }),
+    [isBookings, typeBookings, isShowUpdateBooking,setIsShowUpdate,updateBooking]
   );
+  
   return (
     <ContextBookings.Provider value={value}>
       <div
