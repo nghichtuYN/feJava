@@ -29,7 +29,7 @@ export const ToasterComponent = (props) => {
                 </p>
 
               </Card.Subtitle>
-              <Card.Text>Tự đóng sau 3s</Card.Text>
+              <Card.Text>Auto close after 3s</Card.Text>
             </Toast.Body>
           </Toast>
         </ToastContainer>
