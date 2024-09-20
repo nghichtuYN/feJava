@@ -144,7 +144,7 @@ const RoomPage = () => {
   );
   const value = useMemo(
     () => ({ isRooms, isShowUpdate,updateRoom,setIsShowUpdate,setUpdateRooms }),
-    [isRooms,isShowUpdate,updateRoom ]
+    [isRooms,isShowUpdate,updateRoom]
   );
 
   return (

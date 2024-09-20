@@ -30,12 +30,12 @@ const FormAddNewRoom = ({ handleClose, refetch }) => {
 
   const handleAddRoom = () => {
     mutationAdd.mutate({ number, type, price });
-    // handleClose()
+    handleClose();
   };
   return (
     <>
       <Modal.Header className="text-center">
-        <Modal.Title className="w-100">New Guest</Modal.Title>
+        <Modal.Title className="w-100">New Room</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>

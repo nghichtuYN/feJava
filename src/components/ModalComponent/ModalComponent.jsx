@@ -17,6 +17,7 @@ import { ContextBookings } from "../../page/BookingsPage/BookingsPage";
 import FormAddBooking from "../FormAddBooking/FormAddBooking";
 import { FormUpdateBooking } from "../FormUpdateBooking/FormUpdateBooking";
 import FormCheckOutGuestComponent from "../FormCheckOutGuestComponent/FormCheckOutGuestComponent";
+import FormUpdateService from "../FormUpdateService/FormUpdateService";
 
 const ModalComponent = (props) => {
   const { show, handleClose, refetch } = props;
@@ -32,9 +33,8 @@ const ModalComponent = (props) => {
   const { isGuests } = useContext(ContextGuests);
   const { isDetailGuest } = useContext(ContextDetailGuests);
   const { isRooms, isShowUpdate } = useContext(ContextRooms);
-  const { isServices } = useContext(ContextServices);
+  const { isServices,isShowUpdateService } = useContext(ContextServices);
   const { isBookings, isShowUpdateBooking } = useContext(ContextBookings);
-  console.log(isCheckoutGuest,isRoomService)
   return (
     <>
       <Modal
@@ -58,9 +58,9 @@ const ModalComponent = (props) => {
           <FormAddNewRoom refetch={refetch} handleClose={handleClose} />
         ) : isShowUpdate ? (
           <FormUpdateRoom refetch={refetch} handleClose={handleClose} />
-        ) : isServices ? (
+        ) : isServices && !isShowUpdateService ? (
           <FormCreateService refetch={refetch} handleClose={handleClose} />
-        ) : isBookings && !isShowUpdateBooking ? (
+        ) : isShowUpdateService ?<FormUpdateService refetch={refetch} handleClose={handleClose}/>: isBookings && !isShowUpdateBooking ? (
           <FormAddBooking refetch={refetch} handleClose={handleClose} />
         ) : isShowUpdateBooking ? (
           <FormUpdateBooking refetch={refetch} handleClose={handleClose} />

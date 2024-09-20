@@ -1,17 +1,31 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  OverlayTrigger,
+  Popover,
+  Row,
+  Table,
+} from "react-bootstrap";
 import PaninationComponent from "../../components/PaninationComponent/PaninationComponent";
 
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import { useSelector } from "react-redux";
 import SearchComponent from "../../components/SearchComponent/SearchComponent";
-import { getOccupiedrooms, getStatsAPI } from "../../services/dashboard";
+import {
+  checkOut,
+  getOccupiedrooms,
+  getStatsAPI,
+} from "../../services/dashboard";
 import { useQueryHook } from "../../hooks/useQueryHook";
 import { useDebounce } from "@uidotdev/usehooks";
 import { wait } from "../../ultis/wait";
 import { useLocation, useNavigate } from "react-router-dom";
 import SpinerComponent from "../../components/SpinerComponent/SpinerComponent";
 import NotFoundComponent from "../../components/NotFoundComponent/NotFoundComponent";
+import { useMutationHook } from "../../hooks/useMutationHook";
 
 export const ContextDashboard = createContext("unknow");
 
@@ -34,6 +48,47 @@ const DashBoardPage = () => {
   const [isCheckoutGuest, setIsCheckoutGuest] = useState("");
   const [isRoomService, setIsRoomService] = useState("");
   const [booking, setBooking] = useState({});
+  const [currentPopoverId, setCurrentPopoverId] = useState(null);
+
+  const handleTogglePopover = (id) => {
+    setCurrentPopoverId(currentPopoverId === id ? null : id);
+  };
+  const handleCancelSingle = () => {
+    setCurrentPopoverId(null);
+  };
+
+  const mutationCheckOut = useMutationHook((data) => {
+    const { id } = data;
+    return checkOut(id);
+  });
+
+  const handleCheckoutGuest = () => {
+    setIsCheckoutGuest(checkOutGuest);
+    mutationCheckOut.mutate({ id: currentPopoverId });
+    handleShow();
+  };
+  const {data :infoCheckout}=mutationCheckOut
+
+  const popoverSingle = (
+    <Popover id={`popover-positioned-top`}>
+      <Popover.Header as="h3">Bạn có chắc chắn xóa ?</Popover.Header>
+      <Popover.Body className="d-flex justify-content-around align-items-center">
+        <Button size="sm" variant="danger" onClick={handleCancelSingle}>
+          Hủy
+        </Button>
+        <Button
+          size="sm"
+          variant="dark"
+          onClick={() => {
+            handleCheckoutGuest();
+            handleCancelSingle();
+          }}
+        >
+          Xác nhận
+        </Button>
+      </Popover.Body>
+    </Popover>
+  );
   useEffect(() => {
     if (!user?.name) {
       setShow(true);
@@ -47,20 +102,14 @@ const DashBoardPage = () => {
     setShow(false);
   };
 
-  const handleCheckinGuest = (booking) => {
+  const handleCheckinGuest = () => {
     setIsCheckinGuest(checkInGuest);
     handleShow();
-
   };
-  const handleCheckoutGuest = (booking) => {
-    setIsCheckoutGuest(checkOutGuest);
-    setBooking(booking)
 
-    handleShow();
-  };
   const handleRoomService = (booking) => {
     setIsRoomService(roomServices);
-    setBooking(booking)
+    setBooking(booking);
     handleShow();
   };
   const getStats = async () => {
@@ -96,8 +145,10 @@ const DashBoardPage = () => {
       isRoomService,
       roomServices,
       booking,
+      isDashboard,
+      infoCheckout,
     }),
-    [isCheckinGuest, isCheckoutGuest, isRoomService, booking]
+    [isCheckinGuest, isCheckoutGuest, isRoomService, booking,infoCheckout]
   );
   const options = {
     weekday: "long",
@@ -208,12 +259,26 @@ const DashBoardPage = () => {
                                 <td>{book?.guest?.name}</td>
                                 <td>{checkinDate}</td>
                                 <td>
-                                  <Button
-                                    variant="outline-dark"
-                                    onClick={()=>handleCheckoutGuest(book)}
+                                  <OverlayTrigger
+                                    trigger="click"
+                                    placement={"top"}
+                                    overlay={popoverSingle}
+                                    show={currentPopoverId === book?.bookingId}
+                                    onToggle={() =>
+                                      handleTogglePopover(book?.bookingId)
+                                    }
+                                    rootClose={true}
                                   >
-                                    {checkOutGuest}
-                                  </Button>
+                                    <Button
+                                      variant="outline-dark"
+                                      onClick={() =>
+                                        handleTogglePopover(book?.bookingId)
+                                      }
+                                    >
+                                      {checkOutGuest}
+                                    </Button>
+                                  </OverlayTrigger>
+
                                   <Button
                                     className="ms-2"
                                     variant="outline-dark"

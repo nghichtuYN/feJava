@@ -5,7 +5,7 @@ import { useQueryHook } from "../../hooks/useQueryHook";
 import { useState } from "react";
 import { getRoomByTypeAndAvailable } from "../../services/rooms";
 import { useMutationHook } from "../../hooks/useMutationHook";
-import { createBookingAPI, updateBookingAPI } from "../../services/bookings";
+import {  updateBookingAPI } from "../../services/bookings";
 import { Context } from "../../layouts/DefaultLayout";
 import { BsCheck2Circle } from "react-icons/bs";
 import { ContextBookings } from "../../page/BookingsPage/BookingsPage";
@@ -13,6 +13,7 @@ import { ContextBookings } from "../../page/BookingsPage/BookingsPage";
 export const FormUpdateBooking = ({ refetch, handleClose }) => {
   const [guestId, setGuestId] = useState("");
   const [roomId, setRoomId] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [checkIn, setCheckIn] = useState(null);
   const { setToaster } = useContext(Context);
 
@@ -52,7 +53,7 @@ export const FormUpdateBooking = ({ refetch, handleClose }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo phòng thành công",
+      message: "Cập nhật phòng thành công",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });

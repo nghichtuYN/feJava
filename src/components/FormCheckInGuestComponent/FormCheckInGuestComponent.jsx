@@ -5,7 +5,6 @@ import { useQueryHook } from "../../hooks/useQueryHook";
 import { useState } from "react";
 import { getRoomByTypeAndAvailable } from "../../services/rooms";
 import { useMutationHook } from "../../hooks/useMutationHook";
-import { createBookingAPI } from "../../services/bookings";
 import { Context } from "../../layouts/DefaultLayout";
 import { BsCheck2Circle } from "react-icons/bs";
 import { checkIn } from "../../services/dashboard";
@@ -45,13 +44,11 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
       icon: <BsCheck2Circle size={40} color="black" />,
     });
   };
-  const mutationAdd = useMutationHook(
-    (data) => checkIn(data),
-    onSuccess
-  );
+  const mutationAdd = useMutationHook((data) => checkIn(data), onSuccess);
 
   const handleAddBookings = () => {
     mutationAdd.mutate({ guestId, roomId });
+    handleClose();
   };
   return (
     <>

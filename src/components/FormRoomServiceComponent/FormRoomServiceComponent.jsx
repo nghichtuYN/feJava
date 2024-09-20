@@ -12,6 +12,7 @@ import {
   decreaseAmount,
   increaseAmount,
   removeOrderService,
+  resetOrder,
 } from "../../redux/Order/OrderSlide";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import { addRoomService } from "../../services/dashboard";
@@ -66,7 +67,6 @@ const FormRoomServiceComponent = ({ handleClose, refetch }) => {
     dispatch(removeOrderService({ idService }));
   };
   const mutationAdd = useMutationHook((data) => addRoomService(data));
-  console.log(booking);
   const handleAddRoomService =async () => {
     try {
       for (let index = 0; index < order?.orderItems.length; index++) {
@@ -78,7 +78,7 @@ const FormRoomServiceComponent = ({ handleClose, refetch }) => {
         console.log(payload)
         await mutationAdd.mutateAsync(payload);
       }
-
+      dispatch(resetOrder())
       setToaster({
         type: "light",
         message: "Thêm dịch vụ thành công",
@@ -87,6 +87,8 @@ const FormRoomServiceComponent = ({ handleClose, refetch }) => {
       });
 
       refetch();
+      handleClose()
+
     } catch (error) {
       console.error("Error adding room services:", error);
     }

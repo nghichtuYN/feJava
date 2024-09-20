@@ -5,7 +5,8 @@ export const handleFirst = (
   search,
   isGuests,
   isRooms,
-  isServices
+  isServices,
+  isDashboard
 ) => {
   if (isGuests) {
     if (search !== "")
@@ -22,6 +23,11 @@ export const handleFirst = (
       navigate(`/services/?page=${1}&search=${encodeURIComponent(search)}`);
     else navigate(`/services/?page=${1}`);
   }
+  if (isDashboard) {
+    if (search !== "")
+      navigate(`/dashboards/?page=${1}&search=${encodeURIComponent(search)}`);
+    else navigate(`/dashboards/?page=${1}`);
+  }
 };
 export const handleLast = (
   navigate,
@@ -29,7 +35,8 @@ export const handleLast = (
   search,
   isGuests,
   isRooms,
-  isServices
+  isServices,
+  isDashboard
 ) => {
   if (isGuests) {
     if (search !== "")
@@ -43,8 +50,17 @@ export const handleLast = (
   }
   if (isServices) {
     if (search !== "")
-      navigate(`/services/?page=${numPage}&search=${encodeURIComponent(search)}`);
+      navigate(
+        `/services/?page=${numPage}&search=${encodeURIComponent(search)}`
+      );
     else navigate(`/services/?page=${numPage}`);
+  }
+  if (isDashboard) {
+    if (search !== "")
+      navigate(
+        `/dashboards/?page=${numPage}&search=${encodeURIComponent(search)}`
+      );
+    else navigate(`/dashboards/?page=${numPage}`);
   }
 };
 export const handlePageChange = (
@@ -53,7 +69,8 @@ export const handlePageChange = (
   search,
   isGuests,
   isRooms,
-  isServices
+  isServices,
+  isDashboard
 ) => {
   if (isGuests) {
     if (search !== "")
@@ -76,6 +93,13 @@ export const handlePageChange = (
       );
     else navigate(`/services/?page=${pageIndex}`);
   }
+  if (isDashboard) {
+    if (search !== "")
+      navigate(
+        `/dashboards/?page=${pageIndex}&search=${encodeURIComponent(search)}`
+      );
+    else navigate(`/dashboards/?page=${pageIndex}`);
+  }
 };
 export const handlePagePrevious = (
   pagesCurrent,
@@ -83,7 +107,8 @@ export const handlePagePrevious = (
   search,
   isGuests,
   isRooms,
-  isServices
+  isServices,
+  isDashboard
 ) => {
   if (isGuests) {
     if (search !== "")
@@ -102,9 +127,20 @@ export const handlePagePrevious = (
   if (isServices) {
     if (search !== "")
       navigate(
-        `/services/?page=${pagesCurrent - 1}&search=${encodeURIComponent(search)}`
+        `/services/?page=${pagesCurrent - 1}&search=${encodeURIComponent(
+          search
+        )}`
       );
     else navigate(`/services/?page=${pagesCurrent - 1}`);
+  }
+  if (isDashboard) {
+    if (search !== "")
+      navigate(
+        `/dashboards/?page=${pagesCurrent - 1}&search=${encodeURIComponent(
+          search
+        )}`
+      );
+    else navigate(`/dashboards/?page=${pagesCurrent - 1}`);
   }
 };
 export const handlePageNext = (
@@ -113,7 +149,8 @@ export const handlePageNext = (
   search,
   isGuests,
   isRooms,
-  isServices
+  isServices,
+  isDashboard
 ) => {
   if (isGuests) {
     if (search !== "")
@@ -132,9 +169,20 @@ export const handlePageNext = (
   if (isServices) {
     if (search !== "")
       navigate(
-        `/services/?page=${pagesCurrent + 1}&search=${encodeURIComponent(search)}`
+        `/services/?page=${pagesCurrent + 1}&search=${encodeURIComponent(
+          search
+        )}`
       );
     else navigate(`/services/?page=${pagesCurrent + 1}`);
+  }
+  if (isDashboard) {
+    if (search !== "")
+      navigate(
+        `/dashboards/?page=${pagesCurrent + 1}&search=${encodeURIComponent(
+          search
+        )}`
+      );
+    else navigate(`/dashboards/?page=${pagesCurrent + 1}`);
   }
 };
 export const renderPaginationItems = (
@@ -145,7 +193,8 @@ export const renderPaginationItems = (
   search,
   isGuests,
   isRooms,
-  isServices
+  isServices,
+  isDashboard
 ) => {
   const maxVisiblePage = 5;
   if (pageNumbers?.length <= maxVisiblePage) {
@@ -160,7 +209,8 @@ export const renderPaginationItems = (
             search,
             isGuests,
             isRooms,
-            isServices
+            isServices,
+            isDashboard
           )
         }
       >
@@ -190,7 +240,15 @@ export const renderPaginationItems = (
         key={i}
         active={pagesCurrent === i}
         onClick={() =>
-          handlePageChange(i, navigate, search, isGuests, isRooms, isServices)
+          handlePageChange(
+            i,
+            navigate,
+            search,
+            isGuests,
+            isRooms,
+            isServices,
+            isDashboard
+          )
         }
       >
         {i}

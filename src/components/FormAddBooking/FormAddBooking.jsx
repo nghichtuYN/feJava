@@ -45,7 +45,7 @@ const FormAddBooking = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo phòng thành công",
+      message: "Tạo đơn thành công",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });
@@ -57,6 +57,7 @@ const FormAddBooking = ({ handleClose, refetch }) => {
 
   const handleAddBookings = () => {
     mutationAdd.mutate({ guestId, roomId, checkIn:new Date(checkIn)});
+    handleClose();
 
   };
   return (

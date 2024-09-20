@@ -34,7 +34,7 @@ export const FormUpdateGuest = ({ handleClose, refetch }) => {
   }, onSuccess);
   const handleUpdateGuest = () => {
     mutationUpdate.mutate({ id: guest?.id, name, idCard, phone, gender });
-    handleClose()
+    handleClose();
   };
   return (
     <>

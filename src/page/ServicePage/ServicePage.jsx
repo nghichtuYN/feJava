@@ -41,7 +41,8 @@ const ServicePage = () => {
   const debouncedSearchTerm = useDebounce(search, 1000);
   const searchParams = new URLSearchParams(location.search);
   const page = searchParams.get("page") || 1;
-
+  const [isShowUpdateService, setIsShowUpdate] = useState(false);
+  const [updateService, setUpdateServices] = useState({});
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -142,12 +143,21 @@ const ServicePage = () => {
       </Popover.Body>
     </Popover>
   );
+
+  const handleMove = (service) => {
+    setIsShowUpdate(true);
+    handleShow();
+    setUpdateServices(service);
+  };
+
   const value = useMemo(
     () => ({
       isServices,
       typeServices,
+      isShowUpdateService,
+      updateService,setIsShowUpdate,setUpdateServices
     }),
-    [isServices, typeServices]
+    [isServices, typeServices,updateService,isShowUpdateService]
   );
   return (
     <ContextServices.Provider value={value}>
@@ -237,7 +247,7 @@ const ServicePage = () => {
                           </td>
                           <td>
                             <SquarePen
-                              // onClick={() => handleMove(service)}
+                              onClick={() => handleMove(service)}
                               size={20}
                               className="me-3"
                             />

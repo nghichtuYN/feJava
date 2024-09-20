@@ -29,7 +29,7 @@ const FormAddNewGuest = ({ handleClose, refetch }) => {
   const mutationAdd = useMutationHook((data) => addGuest(data), onSuccess);
   const handleAddGuest = () => {
     mutationAdd.mutate({ name, idCard, gender, phone });
-    // handleClose()
+    handleClose()
   };
   return (
     <>

@@ -23,3 +23,8 @@ export const addRoomService=async(data)=>{
   const res = axios.post(`${API_URLS}/dashboard/room-service`,data);
   return res
 }
+export const checkOut=async(id)=>{
+  const res = axios.put(`${API_URLS}/dashboard/check-out/${id}`);
+  return res
+
+}

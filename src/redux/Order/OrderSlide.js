@@ -41,6 +41,9 @@ export const OrderSlice = createSlice({
       );
       state.orderItems = itemOrder;
     },
+    resetOrder: (state) => {
+      state.orderItems = [];
+    },
   },
 });
 
@@ -49,6 +52,7 @@ export const {
   increaseAmount,
   decreaseAmount,
   removeOrderService,
+  resetOrder
 } = OrderSlice.actions;
 
 export default OrderSlice.reducer;

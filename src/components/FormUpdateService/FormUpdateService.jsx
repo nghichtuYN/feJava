@@ -1,40 +1,62 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../layouts/DefaultLayout";
-import { ContextServices } from "../../page/ServicePage/ServicePage";
 import { BsCheck2Circle } from "react-icons/bs";
 import { useMutationHook } from "../../hooks/useMutationHook";
-import { createServiceAPI } from "../../services/services";
-import { Button, FloatingLabel, Form, InputGroup, Modal } from "react-bootstrap";
+import { updateServiceAPI } from "../../services/services";
+import { ContextServices } from "../../page/ServicePage/ServicePage";
+import {
+  Button,
+  FloatingLabel,
+  Form,
+  InputGroup,
+  Modal,
+} from "react-bootstrap";
 
-export const FormCreateService = ({ handleClose, refetch }) => {
+const FormUpdateService = ({ handleClose, refetch }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState(0);
-  const { setToaster } = useContext(Context);
   const { typeServices } = useContext(ContextServices);
+  const { setToaster } = useContext(Context);
+  const { updateService, setIsShowUpdate, setUpdateServices } =
+    useContext(ContextServices);
   const onSuccess = () => {
     refetch();
     setToaster({
       type: "light",
-      message: "Tạo dịch vụ thành công",
+      message: "Cập nhật dịch vụ thành công",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });
   };
-  const mutationAdd = useMutationHook(
-    (data) => createServiceAPI(data),
-    onSuccess
-  );
 
-  const handleAddService = () => {
-    mutationAdd.mutate({ name, category, price });
+  useEffect(() => {
+    if (updateService) {
+      setName(updateService.name);
+      setCategory(updateService.category);
+      setPrice(updateService.price);
+    }
+  }, [updateService]);
+  const mutationUpdate = useMutationHook((data) => {
+    const { id, ...rest } = data;
+    return updateServiceAPI(id, rest);
+  }, onSuccess);
+  const handleUpdateService = () => {
+    mutationUpdate.mutate({
+      id: updateService?.id,
+      name,
+      category,
+      price: parseFloat(price),
+    });
     handleClose();
+    setIsShowUpdate(false);
+    setUpdateServices({});
   };
 
   return (
     <>
       <Modal.Header className="text-center">
-        <Modal.Title className="w-100">New Service</Modal.Title>
+        <Modal.Title className="w-100">Update Service</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -46,10 +68,11 @@ export const FormCreateService = ({ handleClose, refetch }) => {
               onChange={(e) => setName(e.target.value)}
               type="text"
               placeholder="Enter name"
+              value={name}
             />
           </Form.Group>
           <FloatingLabel
-          className="mb-3"
+            className="mb-3"
             label={
               <>
                 Category <span className="text-danger">*</span>
@@ -59,7 +82,11 @@ export const FormCreateService = ({ handleClose, refetch }) => {
             <Form.Select onChange={(e) => setCategory(e.target.value)}>
               <option defaultValue={0}>--Select category--</option>
               {typeServices?.map((type, index) => (
-                <option key={index} value={type}>
+                <option
+                  selected={updateService?.category === type}
+                  key={index}
+                  value={type}
+                >
                   {type}
                 </option>
               ))}
@@ -72,6 +99,7 @@ export const FormCreateService = ({ handleClose, refetch }) => {
             <Form.Control
               min={0}
               type="number"
+              value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
             <InputGroup.Text>$</InputGroup.Text>
@@ -80,13 +108,23 @@ export const FormCreateService = ({ handleClose, refetch }) => {
         </Form>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-center align-items-center">
-        <Button className="w-100" variant="dark" onClick={handleAddService}>
+        <Button className="w-100" variant="dark" onClick={handleUpdateService}>
           SUBMIT
         </Button>
-        <Button className="w-100" variant="outline-dark" onClick={handleClose}>
+        <Button
+          className="w-100"
+          variant="outline-dark"
+          onClick={() => {
+            handleClose();
+            setIsShowUpdate(false);
+            setUpdateServices({});
+          }}
+        >
           CANCLE
         </Button>
       </Modal.Footer>
     </>
   );
 };
+
+export default FormUpdateService;
