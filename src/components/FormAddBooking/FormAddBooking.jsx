@@ -1,5 +1,10 @@
 import React, { useContext } from "react";
-import { Button, FloatingLabel, Form, Modal } from "react-bootstrap";
+import {
+  Button,
+  FloatingLabel,
+  Form,
+  Modal,
+} from "react-bootstrap";
 import { getAllGuestsNoPaninationAPI } from "../../services/guests";
 import { useQueryHook } from "../../hooks/useQueryHook";
 import { useState } from "react";
@@ -9,9 +14,10 @@ import { createBookingAPI } from "../../services/bookings";
 import { Context } from "../../layouts/DefaultLayout";
 import { BsCheck2Circle } from "react-icons/bs";
 
-const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
+const FormAddBooking = ({ handleClose, refetch }) => {
   const [guestId, setGuestId] = useState("");
   const [roomId, setRoomId] = useState("");
+  const [checkIn, setCheckIn] = useState(null);
   const { setToaster } = useContext(Context);
 
   const [type, setType] = useState("");
@@ -39,7 +45,7 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
     refetch();
     setToaster({
       type: "light",
-      message: "Check in success",
+      message: "Tạo phòng thành công",
       show: true,
       icon: <BsCheck2Circle size={40} color="black" />,
     });
@@ -50,12 +56,13 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
   );
 
   const handleAddBookings = () => {
-    mutationAdd.mutate({ guestId, roomId, checkIn: new Date() });
+    mutationAdd.mutate({ guestId, roomId, checkIn:new Date(checkIn)});
+
   };
   return (
     <>
       <Modal.Header className="text-center">
-        <Modal.Title className="w-100">Check-in Guest</Modal.Title>
+        <Modal.Title className="w-100">Pre-Booking</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -112,6 +119,25 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
               </Form.Select>
             </FloatingLabel>
           ) : null}
+          <Form.Group className="mb-3">
+            <Form.Label>
+              Check-in<span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              onChange={(e) => setCheckIn(e.target.value)}
+              type="date"
+            />
+          </Form.Group>
+          {/* <Form.Group className="mb-3">
+            <Form.Label>
+              Check-out<span className="text-danger">*</span>
+            </Form.Label>
+            <Form.Control
+              onChange={(e) => setCheckOut(e.target.value)}
+              type="date"
+              placeholder="Enter name"
+            />
+          </Form.Group> */}
         </Form>
       </Modal.Body>
       <Modal.Footer className="d-flex justify-content-center align-items-center">
@@ -126,4 +152,4 @@ const FormCheckInGuestComponent = ({ handleClose, refetch }) => {
   );
 };
 
-export default FormCheckInGuestComponent;
+export default FormAddBooking;

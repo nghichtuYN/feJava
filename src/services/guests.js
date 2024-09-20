@@ -1,15 +1,16 @@
 import axios from "axios";
 const API_URLS = process.env.REACT_APP_API;
-export const getAllGuestsAPI = async (
-  page,
-  search = "",
-  filter = ""
-) => {
+export const getAllGuestsAPI = async (page, search = "", filter = "") => {
   const res = axios.get(
-    `${API_URLS}/guests?page=${page}${
-      search ? "&search=" + search : ""
-    }${filter !== "All Guests" ? "&filterCriteria=" + filter : ""}`
+    `${API_URLS}/guests?page=${page}${search ? "&search=" + search : ""}${
+      filter !== "All Guests" ? "&filterCriteria=" + filter : ""
+    }`
   );
+  return res;
+};
+
+export const getAllGuestsNoPaninationAPI = async () => {
+  const res = axios.get(`${API_URLS}/guests`);
   return res;
 };
 export const createGuestAPI = async (data) => {

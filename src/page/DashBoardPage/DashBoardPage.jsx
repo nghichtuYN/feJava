@@ -1,47 +1,52 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Modal,
-  Row,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import PaninationComponent from "../../components/PaninationComponent/PaninationComponent";
+
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import { useSelector } from "react-redux";
+import SearchComponent from "../../components/SearchComponent/SearchComponent";
+import { getOccupiedrooms, getStatsAPI } from "../../services/dashboard";
+import { useQueryHook } from "../../hooks/useQueryHook";
+import { useDebounce } from "@uidotdev/usehooks";
+import { wait } from "../../ultis/wait";
+import { useLocation, useNavigate } from "react-router-dom";
+import SpinerComponent from "../../components/SpinerComponent/SpinerComponent";
+import NotFoundComponent from "../../components/NotFoundComponent/NotFoundComponent";
 
 export const ContextDashboard = createContext("unknow");
 
 const DashBoardPage = () => {
   const isDashboard = "Dashboard";
-  const revenue = "Revenue";
-  const totalRooms = "Total rooms";
-  const quickActions = "Quick Actions";
   const checkInGuest = "Check-in Guest";
-  const checkOutGuest = "Check-out Guest";
+  const checkOutGuest = "Check-out";
   const roomServices = "Room Services";
-  const upComing = "Upcoming Check-ins/ Check-outs";
+  const occupiedRooms = "Occupied Rooms";
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const page = searchParams.get("page") || 1;
   const user = useSelector((state) => state.user);
   const [show, setShow] = useState(false);
+  const [search, setSearch] = useState("");
+  const debouncedSearchTerm = useDebounce(search, 1000);
+  const navigate = useNavigate();
+  const handleShow = () => setShow(true);
+  const [isCheckinGuest, setIsCheckinGuest] = useState("");
+  const [isCheckoutGuest, setIsCheckoutGuest] = useState("");
+  const [isRoomService, setIsRoomService] = useState("");
+  const [booking, setBooking] = useState({});
   useEffect(() => {
     if (!user?.name) {
       setShow(true);
     }
   }, [user]);
-  console.log(!user?.name,show)
 
-  
   const handleClose = () => {
     setIsCheckinGuest("");
     setIsCheckoutGuest("");
     setIsRoomService("");
     setShow(false);
   };
-  const handleShow = () => setShow(true);
-  const [isCheckinGuest, setIsCheckinGuest] = useState("");
-  const [isCheckoutGuest, setIsCheckoutGuest] = useState("");
-  const [isRoomService, setIsRoomService] = useState("");
+
   const handleCheckinGuest = () => {
     setIsCheckinGuest(checkInGuest);
     handleShow();
@@ -50,10 +55,35 @@ const DashBoardPage = () => {
     setIsCheckoutGuest(checkOutGuest);
     handleShow();
   };
-  const handleRoomService = () => {
+  const handleRoomService = (booking) => {
     setIsRoomService(roomServices);
+    setBooking(booking)
     handleShow();
   };
+  const getStats = async () => {
+    const res = await getStatsAPI();
+    return res.data;
+  };
+  const { data: stats } = useQueryHook(["stats"], getStats);
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+    navigate(`/dashboard?page=1&search=${encodeURIComponent(e.target.value)}`);
+  };
+
+  const getOccupiedRooms = async (page, search) => {
+    try {
+      await wait(1500);
+      const res = await getOccupiedrooms(page, search);
+      return res.data;
+    } catch (error) {}
+  };
+  const {
+    data: occupiedRoomsList,
+    refetch,
+    isFetching,
+  } = useQueryHook(["occupiedRooms", page, debouncedSearchTerm], () =>
+    getOccupiedRooms(page - 1, debouncedSearchTerm)
+  );
   const value = useMemo(
     () => ({
       isCheckinGuest,
@@ -62,9 +92,19 @@ const DashBoardPage = () => {
       checkOutGuest,
       isRoomService,
       roomServices,
+      booking,
     }),
-    [isCheckinGuest, isCheckoutGuest, isRoomService]
+    [isCheckinGuest, isCheckoutGuest, isRoomService, booking]
   );
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
   return (
     <ContextDashboard.Provider value={value}>
       <div
@@ -81,53 +121,37 @@ const DashBoardPage = () => {
             style={{ padding: "20px  60px 0 60px" }}
             className="d-flex justify-content-center align-items-center gap-5"
           >
-            <Col className="w-100 " style={{ padding: 0 }}>
+            <Col style={{ padding: 0 }}>
               <Card style={{ border: "1px solid" }}>
-                <Card.Body className="text-start">
-                  <Card.Title>{quickActions}</Card.Title>
-                  <Card.Subtitle className="mb-2 mt-2 text-muted d-flex flex-column gap-4 ">
-                    <Button variant="dark" onClick={handleCheckinGuest}>
-                      {checkInGuest}
-                    </Button>
-                    <Button variant="dark" onClick={handleCheckoutGuest}>
-                      {checkOutGuest}{" "}
-                    </Button>
-                    <Button variant="dark" onClick={handleRoomService}>
-                      {roomServices}
-                    </Button>
-                  </Card.Subtitle>
+                <Card.Body className="d-flex flex-column align-items-start ps-5">
+                  <Card.Title className="mb-2">Available rooms</Card.Title>
+                  <div className="d-flex align-items-center">
+                    <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+                      {stats?.availableRoom}/
+                    </span>
+                    <span
+                      style={{
+                        fontSize: "1rem",
+                        fontWeight: "bold",
+                        marginLeft: "5px",
+                        paddingTop: "6px",
+                      }}
+                    >
+                      {stats?.totalRoom}
+                    </span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>
-            <Col className="d-flex flex-column gap-5" style={{ padding: 0 }}>
+            <Col style={{ padding: 0 }}>
               <Card style={{ border: "1px solid" }}>
-                <Card.Body as={Row} className="text-start">
-                  <div className="col-md-5">
-                    <Card.Title className="fw-bolder">{totalRooms}</Card.Title>
-                    <Card.Text>20 avaiable</Card.Text>
+                <Card.Body className="d-flex flex-column align-items-start ps-5">
+                  <Card.Title className="mb-2">This month revenue</Card.Title>
+                  <div className="d-flex align-items-center">
+                    <span style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+                      $ {stats?.monthRevenue}
+                    </span>
                   </div>
-                  <Card.Subtitle
-                    as={Col}
-                    md="7"
-                    className="mb-2 text-muted fs-2 fw-bolder"
-                  >
-                    100
-                  </Card.Subtitle>
-                </Card.Body>
-              </Card>
-              <Card style={{ border: "1px solid", marginTop: "5px" }}>
-                <Card.Body as={Row} className="text-start">
-                  <div className="col-md-5">
-                    <Card.Title>{revenue}</Card.Title>
-                    <Card.Text>+10% from last month</Card.Text>
-                  </div>
-                  <Card.Subtitle
-                    as={Col}
-                    md="7"
-                    className="mb-2 text-muted fs-2 fw-bolder"
-                  >
-                    $12,345.000
-                  </Card.Subtitle>
                 </Card.Body>
               </Card>
             </Col>
@@ -138,30 +162,101 @@ const DashBoardPage = () => {
           >
             <Card style={{ border: "1px solid" }}>
               <Card.Body className="text-start">
-                <Card.Title>{upComing}</Card.Title>
+                <Card.Title className="fs-4">{occupiedRooms}</Card.Title>
               </Card.Body>
-              <Card.Body className="text-start pt-5">
-                <Card.Subtitle className="mb-2 text-muted fw-bolder">
-                  Linus ,TORVALDS
-                </Card.Subtitle>
-                <Card.Text>Check-in: Room 707</Card.Text>
-              </Card.Body>
-              <Card.Body className="text-start">
-                <Card.Subtitle className="mb-2 text-muted fw-bolder">
-                  Thi Ngoc Tring,Tran
-                </Card.Subtitle>
-                <Card.Text>Check-out: Room 103</Card.Text>
-              </Card.Body>
-              <Card.Body className="text-start">
-                <Card.Subtitle className="mb-2 text-muted fw-bolder">
-                  Alexander, CAPABLANCA
-                </Card.Subtitle>
-                <Card.Text>Check-in: Room 801</Card.Text>
-              </Card.Body>
+              <Row className="ps-3">
+                <Col md={9}>
+                  <SearchComponent
+                    value={search}
+                    onChange={handleSearchChange}
+                    placeholder={"Search..."}
+                  />
+                </Col>
+                <Col md={3}>
+                  <Button variant="dark" onClick={handleCheckinGuest}>
+                    {checkInGuest}
+                  </Button>
+                </Col>
+              </Row>
+              <Row className="ps-3">
+                {isFetching ? (
+                  <SpinerComponent />
+                ) : occupiedRoomsList?.content?.length > 0 ? (
+                  <>
+                    <Row style={{ padding: "20px 55px" }}>
+                      <Table responsive>
+                        <thead>
+                          <tr>
+                            <th>Room</th>
+                            <th>Guest</th>
+                            <th>Check-in</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {occupiedRoomsList?.content?.map((booking, index) => {
+                            const checkinDate = new Date(
+                              booking?.checkIn
+                            ).toLocaleString("en-US", options);
+
+                            return (
+                              <tr key={index}>
+                                <td>{booking?.room?.number}</td>
+                                <td>{booking?.guest?.name}</td>
+                                <td>{checkinDate}</td>
+                                <td>
+                                  <Button
+                                    variant="outline-dark"
+                                    onClick={() => handleCheckoutGuest}
+                                  >
+                                    {checkOutGuest}
+                                  </Button>
+                                  <Button
+                                    className="ms-2"
+                                    variant="outline-dark"
+                                    onClick={() => handleRoomService(booking)}
+                                  >
+                                    {roomServices}
+                                  </Button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </Table>
+                    </Row>
+                    <Row style={{ padding: "20px 55px" }}>
+                      <Col className="d-flex justify-content-start align-items-center">
+                        {`Showing ${
+                          occupiedRoomsList?.pageable?.offset + 1
+                        } to ${
+                          occupiedRoomsList?.pageable?.offset +
+                          occupiedRoomsList?.numberOfElements
+                        } of ${occupiedRoomsList?.totalElements} entries`}
+                      </Col>
+                      <Col className="d-flex justify-content-end align-items-center">
+                        <PaninationComponent
+                          numPage={occupiedRoomsList?.totalPages}
+                          pageCurrent={
+                            occupiedRoomsList?.pageable?.pageNumber + 1
+                          }
+                          search={search}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                ) : (
+                  <NotFoundComponent />
+                )}
+              </Row>
             </Card>
           </Row>
         </Container>
-        <ModalComponent show={show} handleClose={handleClose} />
+        <ModalComponent
+          show={show}
+          handleClose={handleClose}
+          refetch={refetch}
+        />
       </div>
     </ContextDashboard.Provider>
   );

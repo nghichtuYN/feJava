@@ -29,3 +29,11 @@ export const deleteRoomAPI = async (id) => {
   const res = axios.delete(`${API_URLS}/rooms/${id}`);
   return res;
 };
+
+export const getRoomByTypeAndAvailable=async(type)=>{
+  const res = axios.get(
+    `${API_URLS}/rooms/available?type=${type}`
+  );
+  return res
+}
+

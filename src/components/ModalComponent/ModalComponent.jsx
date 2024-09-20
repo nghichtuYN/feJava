@@ -13,6 +13,9 @@ import { FormUpdateRoom } from "../FormUpdateRoom/FormUpdateRoom";
 import { FormCreateService } from "../FormCreateService/FormCreateService";
 import { ContextServices } from "../../page/ServicePage/ServicePage";
 import { FormLogin } from "../FormLogin/FormLogin";
+import { ContextBookings } from "../../page/BookingsPage/BookingsPage";
+import FormAddBooking from "../FormAddBooking/FormAddBooking";
+import { FormUpdateBooking } from "../FormUpdateBooking/FormUpdateBooking";
 
 const ModalComponent = (props) => {
   const { show, handleClose, refetch } = props;
@@ -29,6 +32,7 @@ const ModalComponent = (props) => {
   const { isDetailGuest } = useContext(ContextDetailGuests);
   const { isRooms, isShowUpdate } = useContext(ContextRooms);
   const { isServices } = useContext(ContextServices);
+  const { isBookings, isShowUpdateBooking } = useContext(ContextBookings);
   return (
     <>
       <Modal
@@ -39,11 +43,14 @@ const ModalComponent = (props) => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {isCheckinGuest === checkInGuest && isCheckinGuest ? (
-          <FormCheckInGuestComponent handleClose={handleClose} />
-        ) : null}
+        {/* {isCheckinGuest === checkInGuest && isCheckinGuest ? (
+          <FormCheckInGuestComponent
+            handleClose={handleClose}
+            refetch={refetch}
+          />
+        ) : null} */}
         {isRoomService === roomServices && isRoomService ? (
-          <FormRoomServiceComponent handleClose={handleClose} />
+          <FormRoomServiceComponent handleClose={handleClose}  refetch={refetch} />
         ) : isGuests ? (
           <FormAddNewGuest refetch={refetch} handleClose={handleClose} />
         ) : isDetailGuest ? (
@@ -54,8 +61,17 @@ const ModalComponent = (props) => {
           <FormUpdateRoom refetch={refetch} handleClose={handleClose} />
         ) : isServices ? (
           <FormCreateService refetch={refetch} handleClose={handleClose} />
+        ) : isBookings && !isShowUpdateBooking ? (
+          <FormAddBooking refetch={refetch} handleClose={handleClose} />
+        ) : isShowUpdateBooking ? (
+          <FormUpdateBooking refetch={refetch} handleClose={handleClose} />
+        ) : isCheckinGuest === checkInGuest && isCheckinGuest ? (
+          <FormCheckInGuestComponent
+            handleClose={handleClose}
+            refetch={refetch}
+          />
         ) : (
-          <FormLogin handleClose={handleClose}/>
+          <FormLogin handleClose={handleClose} />
         )}
       </Modal>
     </>

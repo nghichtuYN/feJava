@@ -93,6 +93,16 @@ const DetailGuestPage = () => {
     () => ({ isDetailGuest, guest }),
     [isDetailGuest, guest]
   );
+  console.log(guest);
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
   return (
     <>
       {isFetching ? (
@@ -105,6 +115,7 @@ const DetailGuestPage = () => {
               backgroundColor: "#eee",
               padding: "15px 15px",
               height: "auto",
+              minHeight:'100vh',
             }}
           >
             <Container fluid>
@@ -153,7 +164,7 @@ const DetailGuestPage = () => {
               </Row>
               {isFetching ? (
                 <SpinerComponent />
-              ) : guest?.booking?.length > 0 ? (
+              ) : guest?.bookings?.length > 0 ? (
                 <>
                   <Row style={{ padding: "20px 55px" }}>
                     <Table responsive>
@@ -163,41 +174,31 @@ const DetailGuestPage = () => {
                           <th>Room</th>
                           <th>Check-in</th>
                           <th>Check-out</th>
-                          <th>Amount</th>
-                          <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {guest?.booking?.map((guest, index) => (
-                          <tr key={index}>
-                            <td>{guest?.id}</td>
-                            <td>{guest?.idCard}</td>
-                            <td>{guest?.name}</td>
-                            <td>{guest?.gender}</td>
-                            <td>{guest?.phone}</td>
-                            <td>
-                              {guest?.totalAmount < 1000 ? (
-                                <Badge bg="dark">VIP</Badge>
-                              ) : (
-                                <Badge bg="light" text="dark">
-                                  Normal
-                                </Badge>
-                              )}
-                            </td>
-                            <td>
-                              <SquarePen
-                                //   onClick={() => handleMove(guest?.id)}
-                                size={20}
-                                className="me-3"
-                              />
-                              <Trash size={20} />
-                            </td>
-                          </tr>
-                        ))}
+                        {guest?.bookings?.map((booking, index) => {
+                          const checkinDate = new Date(
+                            booking?.checkIn
+                          ).toLocaleString("en-US", options);
+                          const checkoutDate = booking?.checkOut
+                            ? new Date(booking?.checkOut).toLocaleString(
+                                "en-US",
+                                options
+                              )
+                            : "";
+                          return (
+                            <tr key={index}>
+                              <td>{booking?.id}</td>
+                              <td>{booking?.room?.number}</td>
+                              <td>{checkinDate}</td> <td>{checkoutDate}</td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </Table>
                   </Row>
-                  <Row style={{ padding: "20px 55px" }}>
+                  {/* <Row style={{ padding: "20px 55px" }}>
                     <Col className="d-flex justify-content-start align-items-center">
                       {`Showing ${guest?.pageable?.offset + 1} to ${
                         guest?.pageable?.offset + guest?.numberOfElements
@@ -210,7 +211,7 @@ const DetailGuestPage = () => {
                         //   search={search}
                       />
                     </Col>
-                  </Row>
+                  </Row> */}
                 </>
               ) : (
                 <NotFoundComponent />

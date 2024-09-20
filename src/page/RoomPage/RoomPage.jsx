@@ -30,8 +30,8 @@ const RoomPage = () => {
   const isRooms = "Rooms";
   const [typeRoom, setTypeRooms] = useState("All Rooms");
   const [search, setSearch] = useState("");
-  const location = useLocation();
   const debouncedSearchTerm = useDebounce(search, 1000);
+  const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const page = searchParams.get("page") || 1;
   const [isShowUpdate, setIsShowUpdate] = useState(false);
