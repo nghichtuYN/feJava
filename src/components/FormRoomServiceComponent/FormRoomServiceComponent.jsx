@@ -65,44 +65,33 @@ const FormRoomServiceComponent = ({ handleClose, refetch }) => {
   const handleRemoveService = (idService) => {
     dispatch(removeOrderService({ idService }));
   };
-  const onSuccess = () => {
-    refetch();
-    setToaster({
-      type: "light",
-      message: "Thêm dịch vụ thành công",
-      show: true,
-      icon: <BsCheck2Circle size={40} color="black" />,
-    });
-  };
   const mutationAdd = useMutationHook((data) => addRoomService(data));
   console.log(booking);
-  const handleAddRoomService = async () => {
+  const handleAddRoomService =async () => {
     try {
-      const mutationPromises = order?.orderItems.map((item) => {
+      for (let index = 0; index < order?.orderItems.length; index++) {
         const payload = {
           bookingId: booking?.bookingId,
-          serviceId: item.service,
-          quantity: item.amount,
+          serviceId: order?.orderItems[index]?.service,
+          quantity: order?.orderItems[index]?.amount,
         };
-  
-        return mutationAdd.mutateAsync(payload);
-      });
-  
-      await Promise.all(mutationPromises);
-  
+        console.log(payload)
+        await mutationAdd.mutateAsync(payload);
+      }
+
       setToaster({
         type: "light",
         message: "Thêm dịch vụ thành công",
         show: true,
         icon: <BsCheck2Circle size={40} color="black" />,
       });
-  
+
       refetch();
     } catch (error) {
       console.error("Error adding room services:", error);
     }
   };
-  
+
   return (
     <>
       <Modal.Header className="text-center">

@@ -1,4 +1,3 @@
-import { Car } from "lucide-react";
 import React, { useContext } from "react";
 import { Button, Card, Modal } from "react-bootstrap";
 import { ContextDashboard } from "../../page/DashBoardPage/DashBoardPage";
@@ -6,6 +5,8 @@ import { ContextDashboard } from "../../page/DashBoardPage/DashBoardPage";
 const FormCheckOutGuestComponent = ({ handleClose }) => {
   const { booking } = useContext(ContextDashboard);
     console.log(booking)
+
+  // const 
   const handleCheckOut = () => {};
   return (
     <>
